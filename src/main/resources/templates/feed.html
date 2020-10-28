@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.orf/thymeleaf-extras-springsecurity4">
+<head>
+    <title>Login</title>
+    <div th:replace="/fragments/styling :: head-style" ></div>
+</head>
+<body>
+
+    <div th:if="${#lists.isEmpty(tweetList)}">
+        <h2>No tweets available</h2>
+    </div>
+
+    <div class="container" th:each="tweet:${tweetList}">
+        <h2>Tweets</h2>
+        <div th:each="tweet:${tweetList}">
+            <h5>@<span th:text="${tweet.user.username}"></span>
+            <small><span th:text="${#dates.format(tweet.createdAt, 'M/d/yy')}"></span></small></h5>
+            <p th:utext="${tweet.message}"></p>
+        </div>
+    </div>
+    
+    <div th:replace="/fragments/styling :: body-links" ></div>
+</body>
+</html>
