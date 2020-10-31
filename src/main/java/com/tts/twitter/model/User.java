@@ -1,8 +1,8 @@
 package com.tts.twitter.model;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,10 +15,8 @@ import javax.persistence.ManyToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
 
@@ -28,7 +26,6 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="user_Id")
-	
 	private Long id;
 
     @Email(message = "Please provide a valid email")
@@ -55,12 +52,43 @@ public class User {
     private int active;
 
     @CreationTimestamp
-    private Date createdAt;
-
-    @ManyToMany(cascade = CascadeType.ALL)
+	private Date createdAt;
+	
+	@ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"),
     inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles;
+	private Set<Role> roles;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_follower", joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "follower_id"))
+	private List<User> followers;
+	
+	@ManyToMany(mappedBy="followers")
+	private List<User> following;
+
+	// Constructors - JPA needs empty one
+	public User(){};
+
+	public User(Long id,
+			@Email(message = "Please provide a valid email") @NotEmpty(message = "Please provide an email") String email,
+			@NotEmpty(message = "Please provide a username") @Length(min = 3, message = "Your username must have at least 3 characters") @Length(max = 15, message = "Your username cannot have more than 15 characters") @Pattern(regexp = "[^\\s]+", message = "Your username cannot contain spaces") String username,
+			@Length(min = 5, message = "Your password must have at least 5 characters") @NotEmpty(message = "Please provide a password") String password,
+			@NotEmpty(message = "Please provide your first name") String firstName,
+			@NotEmpty(message = "Please provide your last name") String lastName, int active, Date createdAt,
+			Set<Role> roles, List<User> followers, List<User> following) {
+		this.id = id;
+		this.email = email;
+		this.username = username;
+		this.password = password;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.active = active;
+		this.createdAt = createdAt;
+		this.roles = roles;
+		this.followers = followers;
+		this.following = following;
+	}
 
 	public Long getId() {
 		return id;
@@ -134,11 +162,27 @@ public class User {
 		this.roles = roles;
 	}
 
+	public List<User> getFollowers() {
+		return followers;
+	}
+
+	public void setFollowers(List<User> followers) {
+		this.followers = followers;
+	}
+
+	public List<User> getFollowing() {
+		return following;
+	}
+
+	public void setFollowing(List<User> following) {
+		this.following = following;
+	}
+
 	@Override
 	public String toString() {
 		return "User [active=" + active + ", createdAt=" + createdAt + ", email=" + email + ", firstName=" + firstName
 				+ ", id=" + id + ", lastName=" + lastName + ", password=" + password + ", roles=" + roles
 				+ ", username=" + username + "]";
-	}
+	}	
 
 }

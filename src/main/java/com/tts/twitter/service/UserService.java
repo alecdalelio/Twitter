@@ -1,5 +1,4 @@
 package com.tts.twitter.service;
-
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +38,10 @@ public class UserService {
         user.setActive(1);
         Role userRole = roleRepository.findByRole("USER");
         user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
+        return userRepository.save(user);
+    }
+
+    public User save(User user){
         return userRepository.save(user);
     }
 
