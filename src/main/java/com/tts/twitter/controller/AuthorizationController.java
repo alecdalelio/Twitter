@@ -1,14 +1,16 @@
 package com.tts.twitter.controller;
 
 import javax.validation.Valid;
-import com.tts.twitter.model.User;
-import com.tts.twitter.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+
+import com.tts.twitter.model.User;
+import com.tts.twitter.service.UserService;
 
 @Controller
 public class AuthorizationController {

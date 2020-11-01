@@ -39,6 +39,7 @@ public class TweetController {
         return "newTweet";
     }
     
+    // http://localhost:8080/tweets/java
     @GetMapping(value = "/tweets/{tag}")
 
     public String getTweetsByTag(@PathVariable(value = "tag") String tag, Model model) {
@@ -50,7 +51,9 @@ public class TweetController {
 
     @PostMapping(value = "/tweets")
     public String submitTweetForm(@Valid Tweet tweet, BindingResult bindingResult, Model model) {
+
         User user = userService.getLoggedInUser();
+        
         if (!bindingResult.hasErrors()) {
             tweet.setUser(user);
             tweetService.save(tweet);

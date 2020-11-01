@@ -33,6 +33,10 @@ public class UserService {
         return (List<User>) userRepository.findAll();
     }
 
+    public void save(User user){
+        userRepository.save(user);
+    }
+
     public User saveNewUser (User user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         user.setActive(1);
@@ -41,15 +45,9 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User save(User user){
-        return userRepository.save(user);
-    }
-
     public User getLoggedInUser() {
         String loggedInUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-
         return findByUsername(loggedInUsername);
-
     }
 
 }

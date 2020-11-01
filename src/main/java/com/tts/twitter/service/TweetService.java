@@ -1,19 +1,12 @@
 package com.tts.twitter.service;
-
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.ocpsoft.prettytime.PrettyTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.tts.twitter.model.Tag;
 import com.tts.twitter.model.Tweet;
 import com.tts.twitter.model.User;
@@ -34,14 +27,11 @@ public class TweetService {
         return formatTweets(tweets);
     }
 
-
-		//format tweets?????
     public List<Tweet> findAllByUser(User user) {
         List<Tweet> tweets = tweetRepository.findAllByUserOrderByCreatedAtDesc(user);
         return formatTweets(tweets);
     }
 
-		//format tweets?????
     public List<Tweet> findAllByUsers(List<User> users) {
         List<Tweet> tweets = tweetRepository.findAllByUserInOrderByCreatedAtDesc(users);
         return formatTweets(tweets);
@@ -78,28 +68,6 @@ public class TweetService {
         addTagLinks(tweets);
         shortenLinks(tweets);
         return tweets;
-    }
-
-    private List<TweetDisplay> formatTimestamps(List<Tweet> tweets) {
-        List<TweetDisplay> response = new ArrayList<>();
-        PrettyTime prettyTime = new PrettyTime();
-        SimpleDateFormat simpleDate = new SimpleDateFormat("M/d/yy");
-        Date now = new Date();
-        for (Tweet tweet : tweets) {
-            TweetDisplay tweetDisplay = new TweetDisplay();
-            tweetDisplay.setUser(tweet.getUser());
-            tweetDisplay.setMessage(tweet.getMessage());
-            tweetDisplay.setTags(tweet.getTags());
-            long diffInMillies = Math.abs(now.getTime() - tweet.getCreatedAt().getTime());
-            long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
-            if (diff > 3) {
-                tweetDisplay.setDate(simpleDate.format(tweet.getCreatedAt()));
-            } else {
-                tweetDisplay.setDate(prettyTime.format(tweet.getCreatedAt()));
-            }
-            response.add(tweetDisplay);
-        }
-        return response;
     }
 
     private void addTagLinks(List<Tweet> tweets) {
